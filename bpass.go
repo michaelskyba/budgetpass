@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
 )
 
 func main() {
@@ -18,5 +18,12 @@ func main() {
 	scanner.Scan()
 
 	input := scanner.Text()
-	fmt.Printf("command not found: %v\n", input)
+
+	switch input {
+	case "help":
+		fmt.Println("currently implemented commands:")
+		fmt.Println("- help")
+	default:
+		fmt.Printf("command not found: %v\n", input)
+	}
 }
