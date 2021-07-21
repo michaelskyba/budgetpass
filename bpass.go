@@ -39,6 +39,13 @@ func main() {
 		fmt.Printf("Enter the password for '%v': ", password_name)
 		fmt.Scanln(&local_password)
 
+		// Print to file
+		message := []byte(fmt.Sprintf("%v: encrypt %v using %v\n", password_name, local_password, master_password))
+		err := os.WriteFile(password_name, message, 0666)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 	// Command not found
 	default:
 		os.Exit(1)
