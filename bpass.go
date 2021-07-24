@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"os"
-	// "crypto/aes"
-	// "crypto/cipher"
+	"crypto/aes"
+	"crypto/cipher"
 )
 
 func main() {
@@ -20,8 +21,7 @@ func main() {
 	// New password
 	case "new":
 		password_name := ""
-		master_password := ""
-		local_password := ""
+		input := ""
 
 		if len(os.Args) >= 3 {
 			// Password name included
@@ -34,14 +34,31 @@ func main() {
 
 		// Get main input
 		fmt.Printf("Enter your master password: ")
-		fmt.Scanln(&master_password)
+		fmt.Scanln(&input)
+		
+		// Make sure master_password <= 32 characters
+		if len(input) > 32 {
+			fmt.Println("Master password must be <= 32 characters.")
+			os.Exit(1)
+		}
+
+		// Add trail so that master_password == 32 characters
+		trail := strings.Repeat("0", 32 - len(input))
+		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
 
 		fmt.Printf("Enter the password for '%v': ", password_name)
-		fmt.Scanln(&local_password)
+		fmt.Scanln(&input)
+		local_password := []byte(input)
+
+		// Encryption
+		my_cipher, _ := aes.NewCipher(master_password)
+		gcm, _ := cipher.NewGCM(my_cipher)
+		nonce := make([]byte, gcm.NonceSize())
+		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
 
 		// Print to file
-		message := []byte(fmt.Sprintf("%v: encrypt %v using %v\n", password_name, local_password, master_password))
-		err := os.WriteFile(password_name, message, 0666)
+		// message := []byte(fmt.Sprintf("%v: encrypt %v using %v\n", password_name, local_password, master_password))
+		err := os.WriteFile(password_name, encrypted, 0666)
 		if err != nil {
 			fmt.Println(err)
 		}
