@@ -9,28 +9,22 @@ import (
 )
 
 func main() {
-	// Exit if no command
-	// os.Args includes "bpass", so we check if 1, not 0
-	if len(os.Args) == 1 {
+	usage := "See the README for usage."
+
+	// os.Args includes "bpass" (bpass command password), so we check if < 3, not 2
+	if len(os.Args) < 3 {
+		fmt.Println(usage)
 		os.Exit(1)
 	}
 
-	args := os.Args[1]
-	switch args {
+	command := os.Args[1]
+	password_name := os.Args[2]
+
+	switch command {
 
 	// New password
 	case "new":
-		password_name := ""
 		input := ""
-
-		if len(os.Args) >= 3 {
-			// Password name included
-			password_name = os.Args[2]
-		} else {
-			// Password name excluded
-			fmt.Printf("Enter the name of this password: ")
-			fmt.Scanln(&password_name)
-		}
 
 		// Get main input
 		fmt.Printf("Enter your master password: ")
@@ -57,7 +51,6 @@ func main() {
 		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
 
 		// Print to file
-		// message := []byte(fmt.Sprintf("%v: encrypt %v using %v\n", password_name, local_password, master_password))
 		err := os.WriteFile(password_name, encrypted, 0666)
 		if err != nil {
 			fmt.Println(err)
@@ -65,6 +58,7 @@ func main() {
 
 	// Command not found
 	default:
+		fmt.Println(usage)
 		os.Exit(1)
 
 	}
