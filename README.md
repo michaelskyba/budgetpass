@@ -1,9 +1,6 @@
 # BudgetPass
 budgetpass: a low-budget, likely insecure password manager written in Go
 
-## Installation
-Clone the repo, run ``go build bpass.go``, and then copy the resulting ``bpass`` binary into your ``$PATH``.
-
 ## Usage
 ### Basic Explanation
 budgetpass stores each of your passwords in an encrypted file, where the name
@@ -19,3 +16,7 @@ via the ``$BP_HOME`` variable.
 ### Commands
 - ``bpass new <password name>`` - create a new password. You will need quotation marks if your name contains spaces, but I would recommend against doing this, because filenames with spaces are ugly. Instead, use dashes, underscores, or camelCase.
 - ``bpass get <password name>`` - retrieve a password. Again, spaces require quotes.
+
+## Installation
+Clone the repo, run ``go build bpass.go``, and then copy the resulting ``bpass`` binary into your ``$PATH``.
+
