@@ -52,10 +52,7 @@ func main() {
 		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
 
 		// Print to file
-		err := os.WriteFile(password_name, encrypted, 0666)
-		if err != nil {
-			fmt.Println(err)
-		}
+		os.WriteFile(password_name, encrypted, 0666)
 
 	case "get":
 		input := ""
@@ -88,6 +85,5 @@ func main() {
 	default:
 		fmt.Println(usage)
 		os.Exit(1)
-
 	}
 }
