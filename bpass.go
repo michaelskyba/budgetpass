@@ -21,6 +21,15 @@ func main() {
 	command := os.Args[1]
 	password_name := os.Args[2]
 
+	// Decide where password files will be stored
+	home_dir := ""
+	if os.Getenv("BP_HOME") == "" {
+		home_dir = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
+	} else {
+		home_dir = os.Getenv("BP_HOME")
+	}
+	password_name = fmt.Sprintf("%v/%v", home_dir, password_name)
+
 	switch command {
 
 	// New password
