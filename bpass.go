@@ -9,6 +9,13 @@ import (
 	"io/ioutil"
 )
 
+// Handle errors more elegantly
+func handle(err error) {
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	usage := "See the README for usage."
 
@@ -56,23 +63,17 @@ func main() {
 
 		// Encryption
 		my_cipher, err := aes.NewCipher(master_password)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 		gcm, err := cipher.NewGCM(my_cipher)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 		nonce := make([]byte, gcm.NonceSize())
 		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
 
 		// Print to file
 		err = os.WriteFile(password_name, encrypted, 0666)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 	case "get":
 		input := ""
@@ -92,28 +93,20 @@ func main() {
 
 		// Get contents of password file
 		encrypted, err := ioutil.ReadFile(password_name)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 		// Decrypt
 		my_cipher, err := aes.NewCipher(master_password)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 		gcm, err := cipher.NewGCM(my_cipher)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 		nonce_size := gcm.NonceSize()
 		nonce, encrypted := encrypted[:nonce_size], encrypted[nonce_size:]
 
 		local_password, err := gcm.Open(nil, nonce, encrypted, nil)
-		if err != nil {
-			fmt.Println(err)
-		}
+		handle(err)
 
 		fmt.Println(string(local_password))
 
