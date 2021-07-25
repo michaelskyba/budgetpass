@@ -55,13 +55,24 @@ func main() {
 		local_password := []byte(input)
 
 		// Encryption
-		my_cipher, _ := aes.NewCipher(master_password)
-		gcm, _ := cipher.NewGCM(my_cipher)
+		my_cipher, err := aes.NewCipher(master_password)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		gcm, err := cipher.NewGCM(my_cipher)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		nonce := make([]byte, gcm.NonceSize())
 		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
 
 		// Print to file
-		os.WriteFile(password_name, encrypted, 0666)
+		err = os.WriteFile(password_name, encrypted, 0666)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 	case "get":
 		input := ""
@@ -80,14 +91,30 @@ func main() {
 		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
 
 		// Get contents of password file
-		encrypted, _ := ioutil.ReadFile(password_name)
+		encrypted, err := ioutil.ReadFile(password_name)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		// Decrypt
-		my_cipher, _ := aes.NewCipher(master_password)
-		gcm, _ := cipher.NewGCM(my_cipher)
+		my_cipher, err := aes.NewCipher(master_password)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		gcm, err := cipher.NewGCM(my_cipher)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		nonce_size := gcm.NonceSize()
 		nonce, encrypted := encrypted[:nonce_size], encrypted[nonce_size:]
-		local_password, _ := gcm.Open(nil, nonce, encrypted, nil)
+
+		local_password, err := gcm.Open(nil, nonce, encrypted, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		fmt.Println(string(local_password))
 
 	// Command not found
