@@ -1,5 +1,5 @@
 # BudgetPass
-budgetpass: a low-budget, likely insecure password manager written in Go
+budgetpass: a simple albeit likely insecure password manager written in Go
 
 ## Usage
 ### Basic Explanation
