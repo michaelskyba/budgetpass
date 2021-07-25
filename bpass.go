@@ -39,7 +39,6 @@ func main() {
 
 	switch command {
 
-	// New password
 	case "new":
 		input := ""
 
@@ -108,6 +107,7 @@ func main() {
 		local_password, err := gcm.Open(nil, nonce, encrypted, nil)
 		handle(err)
 
+		// Done - output
 		fmt.Println(string(local_password))
 
 	// Command not found
