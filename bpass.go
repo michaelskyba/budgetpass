@@ -6,6 +6,7 @@ import (
 	"os"
 	"crypto/aes"
 	"crypto/cipher"
+	"io/ioutil"
 )
 
 func main() {
@@ -55,6 +56,33 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+
+	case "get":
+		input := ""
+
+		// Get main input
+		fmt.Printf("Enter your master password: ")
+		fmt.Scanln(&input)
+
+		// Make sure master_password <= 32 characters
+		if len(input) > 32 {
+			input = input[:32]
+		}
+
+		// Add trail so that master_password == 32 characters
+		trail := strings.Repeat("0", 32 - len(input))
+		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
+
+		// Get contents of password file
+		encrypted, _ := ioutil.ReadFile(password_name)
+
+		// Decrypt
+		my_cipher, _ := aes.NewCipher(master_password)
+		gcm, _ := cipher.NewGCM(my_cipher)
+		nonce_size := gcm.NonceSize()
+		nonce, encrypted := encrypted[:nonce_size], encrypted[nonce_size:]
+		local_password, _ := gcm.Open(nil, nonce, encrypted, nil)
+		fmt.Println(string(local_password))
 
 	// Command not found
 	default:
