@@ -17,6 +17,9 @@ via the ``$BP_HOME`` variable.
 - ``bpass new <password name>`` - create a new password. You will need quotation marks if your name contains spaces, but I would recommend against doing this, because filenames with spaces are ugly. Instead, use dashes, underscores, or camelCase.
 - ``bpass get <password name>`` - retrieve a password. Again, spaces require quotes.
 
+### Errors
+If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory`` error, run ``mkdir -p "${BP_HOME:-$HOME/.local/share/bpass}"`` in a terminal.
+
 ## Installation
 Clone the repo, run ``go build bpass.go``, and then copy the resulting ``bpass`` binary into your ``$PATH``.
 
