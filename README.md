@@ -20,6 +20,17 @@ via the ``$BP_HOME`` variable.
 ### Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory`` error, run ``mkdir -p "${BP_HOME:-$HOME/.local/share/bpass}"`` in a terminal.
 
+When using ``bpass get``, an error like this:
+```
+open /home/michael/.local/share/bpass/michael: no such file or directory
+panic: runtime error: slice bounds out of range [:12] with capacity 0
+
+goroutine 1 [running]:
+main.main()
+        /home/michael/s/budgetpass/bpass.go:105 +0x10f5
+```
+indicates that the password you're trying to access does not exist.
+
 ## Installation
 Clone the repo, run ``go build bpass.go``, and then copy the resulting ``bpass`` binary into your ``$PATH``.
 
