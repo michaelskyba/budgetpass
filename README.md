@@ -21,18 +21,18 @@ so attempt to avoid them, if possible.
 - ``bpass new <password name>`` - create a new password.
 - ``bpass get <password name>`` - retrieve a password. If you want to get a
 password without a prompt, possibly because you're using some kind of frontend,
-I think ``pass=$(echo <MASTERPASSWORD> | bpass get <PASSWORDNAME>) ; echo ${pass##* }``
+I think ``pass=$(echo <master password> | bpass get <password name>) ; echo ${pass##* }``
 should generally work.
 
 #### Example Extensions
-- List passwords - ``ls "${BP_HOME:-$HOME/.local/share/bpass}"``
-- Delete a password - ``rm "${BP_HOME:-$HOME/.local/share/bpass}/PASSWORDNAME"``
-- Rename a password - ``cd "${BP_HOME:-$HOME/.local/share/bpass}" && mv OLDNAME NEWNAME && cd -``
-- Update a password - ``rm "${BP_HOME:-$HOME/.local/share/bpass}/PASSWORDNAME && bpass new PASSWORDNAME"``
+- List passwords - ``ls ${BP_HOME:-$HOME/.local/share/bpass}``
+- Delete a password - ``rm ${BP_HOME:-$HOME/.local/share/bpass}/<password name>``
+- Rename a password - ``cd ${BP_HOME:-$HOME/.local/share/bpass} && mv <old name> <new name> && cd -``
+- Update a password - ``rm ${BP_HOME:-$HOME/.local/share/bpass}/<password name> && bpass new <password name>``
 
 ### Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory``
-error, run ``mkdir -p "${BP_HOME:-$HOME/.local/share/bpass}"`` in a terminal.
+error, run ``mkdir -p ${BP_HOME:-$HOME/.local/share/bpass}`` in a terminal.
 
 When using ``bpass get``, an error like this:
 ```
