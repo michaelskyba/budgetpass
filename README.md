@@ -13,12 +13,14 @@ The directory in which these password files are stored is
 ``$HOME/.local/share/bpass`` by default, but can be modified
 via the ``$BP_HOME`` variable.
 
+### Spaces Disclaimer
+From my (limited) testing, everything seems to break when spaces are involved,
+so attempt to avoid them, if possible.
+
 ### Commands
-- ``bpass new <password name>`` - create a new password. You will need quotation
-marks if your name contains spaces, but I would recommend against doing this,
-because filenames with spaces are ugly. Instead, use dashes, underscores, or camelCase.
-- ``bpass get <password name>`` - retrieve a password. Again, spaces require quotes.
-If you want to get a password without a prompt, possibly because you're using some kind of frontend,
+- ``bpass new <password name>`` - create a new password.
+- ``bpass get <password name>`` - retrieve a password. If you want to get a
+password without a prompt, possibly because you're using some kind of frontend,
 I think ``pass=$(echo <MASTERPASSWORD> | bpass get <PASSWORDNAME>) ; echo ${pass##* }``
 should generally work.
 
