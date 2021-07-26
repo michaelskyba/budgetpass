@@ -18,6 +18,9 @@ via the ``$BP_HOME`` variable.
 marks if your name contains spaces, but I would recommend against doing this,
 because filenames with spaces are ugly. Instead, use dashes, underscores, or camelCase.
 - ``bpass get <password name>`` - retrieve a password. Again, spaces require quotes.
+If you want to get a password without a prompt, possibly because you're using some kind of frontend,
+I think ``pass=$(echo <MASTERPASSWORD> | bpass get <PASSWORDNAME>) ; echo ${pass##* }``
+should generally work.
 
 ### Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory``
