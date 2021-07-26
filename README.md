@@ -1,8 +1,7 @@
 # BudgetPass
 budgetpass: a simple albeit likely insecure password manager written in Go
 
-## Usage
-### Basic Explanation
+## Basic Explanation
 budgetpass stores each of your passwords in an encrypted file, where the name
 of the file is the name you gave that password. The encryption uses AES, where
 your master password is the key. So, unless somebody has your master password,
@@ -13,24 +12,24 @@ The directory in which these password files are stored is
 ``$HOME/.local/share/bpass`` by default, but can be modified
 via the ``$BP_HOME`` variable.
 
-### Spaces Disclaimer
+## Spaces Disclaimer
 From my (limited) testing, everything seems to break when spaces are involved,
 so attempt to avoid them, if possible.
 
-### Commands
+## Commands
 - ``bpass new <password name>`` - create a new password.
 - ``bpass get <password name>`` - retrieve a password. If you want to get a
 password without a prompt, possibly because you're using some kind of frontend,
 I think ``pass=$(echo <master password> | bpass get <password name>) ; echo ${pass##* }``
 should generally work.
 
-#### Example Extensions
+## Example Extensions
 - List passwords - ``ls ${BP_HOME:-$HOME/.local/share/bpass}``
 - Delete a password - ``rm ${BP_HOME:-$HOME/.local/share/bpass}/<password name>``
 - Rename a password - ``cd ${BP_HOME:-$HOME/.local/share/bpass} && mv <old name> <new name> && cd -``
 - Update a password - ``rm ${BP_HOME:-$HOME/.local/share/bpass}/<password name> && bpass new <password name>``
 
-### Errors
+## Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory``
 error, run ``mkdir -p ${BP_HOME:-$HOME/.local/share/bpass}`` in a terminal.
 
