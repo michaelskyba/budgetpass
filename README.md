@@ -24,6 +24,12 @@ password without a prompt, possibly because you're using some kind of frontend,
 I think ``pass=$(echo <MASTERPASSWORD> | bpass get <PASSWORDNAME>) ; echo ${pass##* }``
 should generally work.
 
+#### Example Extensions
+- List passwords - ``ls "${BP_HOME:-$HOME/.local/share/bpass}"``
+- Delete a password - ``rm "${BP_HOME:-$HOME/.local/share/bpass}/PASSWORDNAME"``
+- Rename a password - ``cd "${BP_HOME:-$HOME/.local/share/bpass}" && mv OLDNAME NEWNAME && cd -``
+- Update a password - ``rm "${BP_HOME:-$HOME/.local/share/bpass}/PASSWORDNAME && bpass new PASSWORDNAME"``
+
 ### Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory``
 error, run ``mkdir -p "${BP_HOME:-$HOME/.local/share/bpass}"`` in a terminal.
