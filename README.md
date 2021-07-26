@@ -1,7 +1,7 @@
 # BudgetPass
 budgetpass: a simple albeit likely insecure password manager written in Go
 
-## Basic Explanation
+## Overview
 budgetpass stores each of your passwords in an encrypted file, where the name
 of the file is the name you gave that password. The encryption uses AES, where
 your master password is the key. So, unless somebody has your master password,
