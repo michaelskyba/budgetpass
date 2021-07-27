@@ -18,6 +18,7 @@ func handle(err error) {
 
 func main() {
 	usage := "See the README for usage."
+	var input string
 
 	// os.Args includes "bpass" (bpass command password), so we check if < 3, not 2
 	if len(os.Args) < 3 {
@@ -29,7 +30,7 @@ func main() {
 	password_name := os.Args[2]
 
 	// Decide where password files will be stored
-	home_dir := ""
+	var home_dir string
 	if os.Getenv("BP_HOME") == "" {
 		home_dir = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
 	} else {
@@ -40,8 +41,6 @@ func main() {
 	switch command {
 
 	case "new":
-		input := ""
-
 		// Get main input
 		fmt.Printf("Enter your master password: ")
 		fmt.Scanln(&input)
@@ -75,8 +74,6 @@ func main() {
 		handle(err)
 
 	case "get":
-		input := ""
-
 		// Get main input
 		fmt.Printf("Enter your master password: ")
 		fmt.Scanln(&input)
