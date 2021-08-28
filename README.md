@@ -20,8 +20,7 @@ so attempt to avoid them, if possible.
 - ``bpass new <password name>`` - create a new password.
 - ``bpass get <password name>`` - retrieve a password. If you want to get a
 password without a prompt, possibly because you're using some kind of frontend,
-I think ``pass=$(echo <master password> | bpass get <password name>) ; echo ${pass##* }``
-should generally work.
+standard input should generally work. Here's an example: [msk_pass](https://gist.github.com/michaelskyba/f207baab9dda82472ab28433130bb5f5).
 
 ## Example Extensions
 - List passwords - ``ls ${BP_HOME:-$HOME/.local/share/bpass}``
