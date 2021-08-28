@@ -10,7 +10,7 @@ to any of your passwords.
 
 The directory in which these password files are stored is
 ``$HOME/.local/share/bpass`` by default, but can be modified
-via the ``$BP_HOME`` variable.
+via the ``$BP_HOME`` variable. ``$BP_HOME`` will be used in the examples.
 
 ## Spaces Disclaimer
 From my (limited) testing, everything seems to break when spaces are involved,
@@ -23,10 +23,10 @@ password without a prompt, possibly because you're using some kind of frontend,
 standard input should generally work. Here's an example: [msk_pass](https://gist.github.com/michaelskyba/f207baab9dda82472ab28433130bb5f5).
 
 ## Example Extensions
-- List passwords - ``ls ${BP_HOME:-$HOME/.local/share/bpass}``
-- Delete a password - ``rm ${BP_HOME:-$HOME/.local/share/bpass}/<password name>``
-- Rename a password - ``cd ${BP_HOME:-$HOME/.local/share/bpass} && mv <old name> <new name> && cd -``
-- Update a password - ``rm ${BP_HOME:-$HOME/.local/share/bpass}/<password name> && bpass new <password name>``
+- List passwords - ``ls $BP_HOME``
+- Delete a password - ``rm $BP_HOME/<password name>``
+- Rename a password - ``cd $BP_HOME && mv <old name> <new name> && cd -``
+- Update a password - ``rm $BP_HOME/<password name> && bpass new <password name>``
 
 ## Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory``
