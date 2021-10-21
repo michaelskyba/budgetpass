@@ -17,7 +17,10 @@ func handle(err error) {
 }
 
 func main() {
-	usage := "See the README for usage."
+	usage := `Commands:
+bpass new <password name>
+bpass get <password name>
+See the README for more information.`
 	var input string
 
 	// os.Args includes "bpass" (bpass command password), so we check if < 3, not 2
