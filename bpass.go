@@ -18,9 +18,7 @@ func handle(err error) {
 }
 
 func main() {
-	usage := `Commands:
-bpass new <password name>
-bpass get <password name>
+	usage := `Usage: bpass <new|get> <password name>
 See the README for more information.`
 	var input string
 
