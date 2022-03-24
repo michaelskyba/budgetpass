@@ -1,36 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"strings"
 	"os"
-	"crypto/aes"
-	"crypto/cipher"
-	"io/ioutil"
 	"bufio"
 )
-
-func handle(err error) {
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-}
-
-func getPassFile(passName string) string {
-	bpHome := os.Getenv("BP_HOME")
-
-	if bpHome == "" {
-		bpHome = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
-	}
-
-	return fmt.Sprintf("%v/%v", bpHome, passName)
-}
-
-func userError() {
-	fmt.Println("Usage: bpass <new|get> <password name>\nSee the README for more information.")
-	os.Exit(1)
-}
 
 func main() {
 	// os.Args includes "bpass" (bpass command password), so we check if < 3, not 2
@@ -40,73 +13,15 @@ func main() {
 
 	command := os.Args[1]
 	passFile := getPassFile(os.Args[2])
-
 	scanner := bufio.NewScanner(os.Stdin)
-	var input string
 
 	switch command {
 
 	case "new":
-		// Master password
-		scanner.Scan()
-		input = scanner.Text()
-		
-		if len(input) > 32 {
-			fmt.Println("Master password must be <= 32 characters.")
-			os.Exit(1)
-		}
-
-		// Add trail so that masterPassword == 32 characters
-		trail := strings.Repeat("0", 32 - len(input))
-		masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
-
-		// Local password
-		scanner.Scan()
-		input = scanner.Text()
-		localPassword := []byte(input)
-
-		myCipher, err := aes.NewCipher(masterPassword)
-		handle(err)
-
-		gcm, err := cipher.NewGCM(myCipher)
-		handle(err)
-
-		nonce := make([]byte, gcm.NonceSize())
-		encrypted := gcm.Seal(nonce, nonce, localPassword, nil)
-
-		err = os.WriteFile(passFile, encrypted, 0666)
-		handle(err)
+		createPassword(passFile, scanner)
 
 	case "get":
-		// Master password
-		scanner.Scan()
-		input = scanner.Text()
-
-		if len(input) > 32 {
-			input = input[:32]
-		}
-
-		// Add trail so that masterPassword == 32 characters
-		trail := strings.Repeat("0", 32 - len(input))
-		masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
-
-		encrypted, err := ioutil.ReadFile(passFile)
-		handle(err)
-
-		// Decrypt
-		myCipher, err := aes.NewCipher(masterPassword)
-		handle(err)
-
-		gcm, err := cipher.NewGCM(myCipher)
-		handle(err)
-
-		nonceSize := gcm.NonceSize()
-		nonce, encrypted := encrypted[:nonceSize], encrypted[nonceSize:]
-
-		localPassword, err := gcm.Open(nil, nonce, encrypted, nil)
-		handle(err)
-
-		fmt.Println(string(localPassword))
+		getPassword(passFile, scanner)
 
 	// Command not found
 	default:
