@@ -10,7 +10,6 @@ import (
 	"bufio"
 )
 
-// Handle errors more elegantly
 func handle(err error) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -52,7 +51,6 @@ func main() {
 		scanner.Scan()
 		input = scanner.Text()
 		
-		// Make sure masterPassword <= 32 characters
 		if len(input) > 32 {
 			fmt.Println("Master password must be <= 32 characters.")
 			os.Exit(1)
@@ -67,7 +65,6 @@ func main() {
 		input = scanner.Text()
 		localPassword := []byte(input)
 
-		// Encryption
 		myCipher, err := aes.NewCipher(masterPassword)
 		handle(err)
 
@@ -77,7 +74,6 @@ func main() {
 		nonce := make([]byte, gcm.NonceSize())
 		encrypted := gcm.Seal(nonce, nonce, localPassword, nil)
 
-		// Print to file
 		err = os.WriteFile(passFile, encrypted, 0666)
 		handle(err)
 
@@ -86,7 +82,6 @@ func main() {
 		scanner.Scan()
 		input = scanner.Text()
 
-		// Make sure masterPassword <= 32 characters
 		if len(input) > 32 {
 			input = input[:32]
 		}
@@ -95,7 +90,6 @@ func main() {
 		trail := strings.Repeat("0", 32 - len(input))
 		masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
 
-		// Get contents of password file
 		encrypted, err := ioutil.ReadFile(passFile)
 		handle(err)
 
@@ -112,7 +106,6 @@ func main() {
 		localPassword, err := gcm.Open(nil, nonce, encrypted, nil)
 		handle(err)
 
-		// Done - output
 		fmt.Println(string(localPassword))
 
 	// Command not found
