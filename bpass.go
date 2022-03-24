@@ -17,17 +17,17 @@ func handle(err error) {
 	}
 }
 
-func get_pass_file(pass_name string) string {
-	bp_home := os.Getenv("BP_HOME")
+func getPassFile(passName string) string {
+	bpHome := os.Getenv("BP_HOME")
 
-	if bp_home == "" {
-		bp_home = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
+	if bpHome == "" {
+		bpHome = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
 	}
 
-	return fmt.Sprintf("%v/%v", bp_home, pass_name)
+	return fmt.Sprintf("%v/%v", bpHome, passName)
 }
 
-func user_error() {
+func userError() {
 	fmt.Println("Usage: bpass <new|get> <password name>\nSee the README for more information.")
 	os.Exit(1)
 }
@@ -35,11 +35,11 @@ func user_error() {
 func main() {
 	// os.Args includes "bpass" (bpass command password), so we check if < 3, not 2
 	if len(os.Args) < 3 {
-		user_error()
+		userError()
 	}
 
 	command := os.Args[1]
-	pass_file := get_pass_file(os.Args[2])
+	passFile := getPassFile(os.Args[2])
 
 	var input string
 
@@ -50,32 +50,32 @@ func main() {
 		fmt.Printf("Enter your master password: ")
 		fmt.Scanln(&input)
 		
-		// Make sure master_password <= 32 characters
+		// Make sure masterPassword <= 32 characters
 		if len(input) > 32 {
 			fmt.Println("Master password must be <= 32 characters.")
 			os.Exit(1)
 		}
 
-		// Add trail so that master_password == 32 characters
+		// Add trail so that masterPassword == 32 characters
 		trail := strings.Repeat("0", 32 - len(input))
-		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
+		masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
 
-		fmt.Printf("Enter the password for '%v': ", pass_file)
+		fmt.Printf("Enter the password for '%v': ", passFile)
 		fmt.Scanln(&input)
-		local_password := []byte(input)
+		localPassword := []byte(input)
 
 		// Encryption
-		my_cipher, err := aes.NewCipher(master_password)
+		myCipher, err := aes.NewCipher(masterPassword)
 		handle(err)
 
-		gcm, err := cipher.NewGCM(my_cipher)
+		gcm, err := cipher.NewGCM(myCipher)
 		handle(err)
 
 		nonce := make([]byte, gcm.NonceSize())
-		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
+		encrypted := gcm.Seal(nonce, nonce, localPassword, nil)
 
 		// Print to file
-		err = os.WriteFile(pass_file, encrypted, 0666)
+		err = os.WriteFile(passFile, encrypted, 0666)
 		handle(err)
 
 	case "get":
@@ -83,37 +83,37 @@ func main() {
 		fmt.Printf("Enter your master password: ")
 		fmt.Scanln(&input)
 
-		// Make sure master_password <= 32 characters
+		// Make sure masterPassword <= 32 characters
 		if len(input) > 32 {
 			input = input[:32]
 		}
 
-		// Add trail so that master_password == 32 characters
+		// Add trail so that masterPassword == 32 characters
 		trail := strings.Repeat("0", 32 - len(input))
-		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
+		masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
 
 		// Get contents of password file
-		encrypted, err := ioutil.ReadFile(pass_file)
+		encrypted, err := ioutil.ReadFile(passFile)
 		handle(err)
 
 		// Decrypt
-		my_cipher, err := aes.NewCipher(master_password)
+		myCipher, err := aes.NewCipher(masterPassword)
 		handle(err)
 
-		gcm, err := cipher.NewGCM(my_cipher)
+		gcm, err := cipher.NewGCM(myCipher)
 		handle(err)
 
-		nonce_size := gcm.NonceSize()
-		nonce, encrypted := encrypted[:nonce_size], encrypted[nonce_size:]
+		nonceSize := gcm.NonceSize()
+		nonce, encrypted := encrypted[:nonceSize], encrypted[nonceSize:]
 
-		local_password, err := gcm.Open(nil, nonce, encrypted, nil)
+		localPassword, err := gcm.Open(nil, nonce, encrypted, nil)
 		handle(err)
 
 		// Done - output
-		fmt.Println(string(local_password))
+		fmt.Println(string(localPassword))
 
 	// Command not found
 	default:
-		user_error()
+		userError()
 	}
 }
