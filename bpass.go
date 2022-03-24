@@ -42,20 +42,15 @@ func main() {
 	command := os.Args[1]
 	passFile := getPassFile(os.Args[2])
 
+	scanner := bufio.NewScanner(os.Stdin)
 	var input string
 
 	switch command {
 
-	case "stdin":
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			fmt.Println(scanner.Text())
-		}
-
 	case "new":
-		// Get main input
-		fmt.Printf("Enter your master password: ")
-		fmt.Scanln(&input)
+		// Master password
+		scanner.Scan()
+		input = scanner.Text()
 		
 		// Make sure masterPassword <= 32 characters
 		if len(input) > 32 {
@@ -67,8 +62,9 @@ func main() {
 		trail := strings.Repeat("0", 32 - len(input))
 		masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
 
-		fmt.Printf("Enter the password for '%v': ", passFile)
-		fmt.Scanln(&input)
+		// Local password
+		scanner.Scan()
+		input = scanner.Text()
 		localPassword := []byte(input)
 
 		// Encryption
@@ -86,9 +82,9 @@ func main() {
 		handle(err)
 
 	case "get":
-		// Get main input
-		fmt.Printf("Enter your master password: ")
-		fmt.Scanln(&input)
+		// Master password
+		scanner.Scan()
+		input = scanner.Text()
 
 		// Make sure masterPassword <= 32 characters
 		if len(input) > 32 {
