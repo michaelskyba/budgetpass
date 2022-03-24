@@ -7,6 +7,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"io/ioutil"
+	"bufio"
 )
 
 // Handle errors more elegantly
@@ -44,6 +45,12 @@ func main() {
 	var input string
 
 	switch command {
+
+	case "stdin":
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			fmt.Println(scanner.Text())
+		}
 
 	case "new":
 		// Get main input
