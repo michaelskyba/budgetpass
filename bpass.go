@@ -17,28 +17,31 @@ func handle(err error) {
 	}
 }
 
-func main() {
-	usage := `Usage: bpass <new|get> <password name>
-See the README for more information.`
-	var input string
+func get_pass_file(pass_name string) string {
+	bp_home := os.Getenv("BP_HOME")
 
+	if bp_home == "" {
+		bp_home = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
+	}
+
+	return fmt.Sprintf("%v/%v", bp_home, pass_name)
+}
+
+func user_error() {
+	fmt.Println("Usage: bpass <new|get> <password name>\nSee the README for more information.")
+	os.Exit(1)
+}
+
+func main() {
 	// os.Args includes "bpass" (bpass command password), so we check if < 3, not 2
 	if len(os.Args) < 3 {
-		fmt.Println(usage)
-		os.Exit(1)
+		user_error()
 	}
 
 	command := os.Args[1]
-	password_name := os.Args[2]
+	pass_file := get_pass_file(os.Args[2])
 
-	// Decide where password files will be stored
-	var home_dir string
-	if os.Getenv("BP_HOME") == "" {
-		home_dir = fmt.Sprintf("%v/.local/share/bpass", os.Getenv("HOME"))
-	} else {
-		home_dir = os.Getenv("BP_HOME")
-	}
-	password_name = fmt.Sprintf("%v/%v", home_dir, password_name)
+	var input string
 
 	switch command {
 
@@ -57,7 +60,7 @@ See the README for more information.`
 		trail := strings.Repeat("0", 32 - len(input))
 		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
 
-		fmt.Printf("Enter the password for '%v': ", password_name)
+		fmt.Printf("Enter the password for '%v': ", pass_file)
 		fmt.Scanln(&input)
 		local_password := []byte(input)
 
@@ -72,7 +75,7 @@ See the README for more information.`
 		encrypted := gcm.Seal(nonce, nonce, local_password, nil)
 
 		// Print to file
-		err = os.WriteFile(password_name, encrypted, 0666)
+		err = os.WriteFile(pass_file, encrypted, 0666)
 		handle(err)
 
 	case "get":
@@ -90,7 +93,7 @@ See the README for more information.`
 		master_password := []byte(fmt.Sprintf("%v%v", input, trail))
 
 		// Get contents of password file
-		encrypted, err := ioutil.ReadFile(password_name)
+		encrypted, err := ioutil.ReadFile(pass_file)
 		handle(err)
 
 		// Decrypt
@@ -111,7 +114,6 @@ See the README for more information.`
 
 	// Command not found
 	default:
-		fmt.Println(usage)
-		os.Exit(1)
+		user_error()
 	}
 }
