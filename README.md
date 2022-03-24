@@ -1,12 +1,12 @@
-# BudgetPass
+# budgetpass
 budgetpass: a simple albeit likely insecure password manager written in Go
 
 ## Overview
-budgetpass stores each of your passwords in an encrypted file, where the name
-of the file is the name you gave that password. The encryption uses AES, where
-your master password is the key. So, unless somebody has your master password,
-they won't be able to decrypt your password file, and hence will not have access
-to any of your passwords.
+budgetpass stores each of your ("local") passwords in encrypted files, where
+the name of the file is the name you gave that password. The encryption uses
+AES, where your master password is the key. So, unless somebody has your master
+password, they won't be able to decrypt your password files and hence will not
+have access to any of your passwords.
 
 The directory in which these password files are stored is
 ``$HOME/.local/share/bpass`` by default, but can be modified
@@ -14,23 +14,25 @@ via the ``$BP_HOME`` variable. ``$BP_HOME`` will be used in the examples.
 
 ## Spaces Disclaimer
 From my (limited) testing, everything seems to break when spaces are involved,
-so attempt to avoid them, if possible.
+so avoid them.
 
 ## Commands
-- ``bpass new <password name>`` - create a new password.
-- ``bpass get <password name>`` - retrieve a password. If you want to get a
-password without a prompt, possibly because you're using some kind of frontend,
-standard input should generally work. Here's an example: [msk_pass](https://gist.github.com/michaelskyba/f207baab9dda82472ab28433130bb5f5).
+1. ``echo "<master password>\n<local password>" | bpass new <password name>`` - create a new password.
+2. ``echo "<master password>" | bpass get <password name>`` - retrieve a password.
 
-## Example Extensions
+## Example extensions
 - List passwords - ``ls $BP_HOME``
 - Delete a password - ``rm $BP_HOME/<password name>``
-- Rename a password - ``cd $BP_HOME && mv <old name> <new name> && cd -``
+- Rename a password - ``cd $BP_HOME && mv <old name> <new name>``
 - Update a password - ``rm $BP_HOME/<password name> && bpass new <password name>``
+
+As you can see, the point is for budgetpass to only provide the
+encryption/decryption logic. The rest of what might be considered basic
+password manager functionality is left for your scripts, as you want it.
 
 ## Errors
 If, when using ``bpass new``, you get some sort of ``open ...: no such file or directory``
-error, run ``mkdir -p ${BP_HOME:-$HOME/.local/share/bpass}`` in a terminal.
+error, run ``mkdir -p ${BP_HOME:-$HOME/.local/share/bpass}``.
 
 When using ``bpass get``, an error like this:
 ```
@@ -46,4 +48,3 @@ indicates that the password you're trying to access does not exist.
 ## Installation
 Clone the repo, run ``go build bpass.go``, and then copy the resulting
 ``bpass`` binary into your ``$PATH``.
-
