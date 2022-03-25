@@ -23,7 +23,6 @@ func main() {
 	case "get":
 		getPassword(passFile, scanner)
 
-	// Command not found
 	default:
 		userError()
 	}

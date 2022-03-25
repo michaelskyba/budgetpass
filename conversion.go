@@ -5,29 +5,29 @@ import (
 	"crypto/cipher"
 )
 
-func encrypt(masterPassword, localPassword []byte) []byte {
-	myCipher, err := aes.NewCipher(masterPassword)
+func encrypt(key, plaintext []byte) []byte {
+	myCipher, err := aes.NewCipher(key)
 	handle(err)
 
 	gcm, err := cipher.NewGCM(myCipher)
 	handle(err)
 
 	nonce := make([]byte, gcm.NonceSize())
-	return gcm.Seal(nonce, nonce, localPassword, nil)
+	return gcm.Seal(nonce, nonce, plaintext, nil)
 }
 
-func decrypt(masterPassword, encrypted []byte) []byte {
-	myCipher, err := aes.NewCipher(masterPassword)
+func decrypt(key, ciphertext []byte) []byte {
+	myCipher, err := aes.NewCipher(key)
 	handle(err)
 
 	gcm, err := cipher.NewGCM(myCipher)
 	handle(err)
 
 	nonceSize := gcm.NonceSize()
-	nonce, encrypted := encrypted[:nonceSize], encrypted[nonceSize:]
+	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
 
-	localPassword, err := gcm.Open(nil, nonce, encrypted, nil)
+	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
 	handle(err)
 
-	return localPassword
+	return plaintext
 }

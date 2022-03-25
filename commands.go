@@ -22,10 +22,8 @@ func createPassword(passFile string, scanner *bufio.Scanner) {
 	trail := strings.Repeat("0", 32 - len(input))
 	masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
 
-	// Local password
 	scanner.Scan()
-	input = scanner.Text()
-	localPassword := []byte(input)
+	localPassword := []byte(scanner.Text())
 
 	encrypted := encrypt(masterPassword, localPassword)
 
