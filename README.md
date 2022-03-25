@@ -46,5 +46,7 @@ main.main()
 indicates that the password you're trying to access does not exist.
 
 ## Installation
-Clone the repo, run ``go build bpass.go``, and then copy the resulting
-``bpass`` binary into your ``$PATH``.
+```
+git clone --depth 1 https://github.com/michaelskyba/budgetpass
+su -c "go build -o /usr/local/bin/bpass"
+```
