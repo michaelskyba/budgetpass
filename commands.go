@@ -14,8 +14,7 @@ func createPassword(passFile string, scanner *bufio.Scanner) {
 	input := scanner.Text()
 	
 	if len(input) > 32 {
-		fmt.Println("Master password must be <= 32 characters.")
-		os.Exit(1)
+		printError("Master password must be <= 32 characters.")
 	}
 
 	// Add trail so that masterPassword == 32 characters
@@ -28,7 +27,7 @@ func createPassword(passFile string, scanner *bufio.Scanner) {
 	encrypted := encrypt(masterPassword, localPassword)
 
 	err := os.WriteFile(passFile, encrypted, 0666)
-	handle(err)
+	hdl(err)
 }
 
 func getPassword(passFile string, scanner *bufio.Scanner) {
@@ -45,7 +44,7 @@ func getPassword(passFile string, scanner *bufio.Scanner) {
 	masterPassword := []byte(fmt.Sprintf("%v%v", input, trail))
 
 	encrypted, err := ioutil.ReadFile(passFile)
-	handle(err)
+	hdl(err)
 
 	fmt.Println(string(decrypt(masterPassword, encrypted)))
 }

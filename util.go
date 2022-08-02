@@ -5,10 +5,9 @@ import (
 	"fmt"
 )
 
-func handle(err error) {
+func hdl(err error) {
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		panic(err)
 	}
 }
 
@@ -22,7 +21,11 @@ func getPassFile(passName string) string {
 	return fmt.Sprintf("%v/%v", bpHome, passName)
 }
 
-func userError() {
-	fmt.Println("Usage: bpass <new|get> <password name>\nSee the README for more information.")
+func printError(message string) {
+	fmt.Fprintln(os.Stderr, message)
 	os.Exit(1)
+}
+
+func userError() {
+	printError("Usage: bpass <new|get> <password name>\nSee the README for more information.")
 }

@@ -7,10 +7,10 @@ import (
 
 func encrypt(key, plaintext []byte) []byte {
 	myCipher, err := aes.NewCipher(key)
-	handle(err)
+	hdl(err)
 
 	gcm, err := cipher.NewGCM(myCipher)
-	handle(err)
+	hdl(err)
 
 	nonce := make([]byte, gcm.NonceSize())
 	return gcm.Seal(nonce, nonce, plaintext, nil)
@@ -18,16 +18,16 @@ func encrypt(key, plaintext []byte) []byte {
 
 func decrypt(key, ciphertext []byte) []byte {
 	myCipher, err := aes.NewCipher(key)
-	handle(err)
+	hdl(err)
 
 	gcm, err := cipher.NewGCM(myCipher)
-	handle(err)
+	hdl(err)
 
 	nonceSize := gcm.NonceSize()
 	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
 
 	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
-	handle(err)
+	hdl(err)
 
 	return plaintext
 }
